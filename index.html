@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Dropdown Page</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            text-align: center;
+        }
+        .dropdown {
+            margin: 0 10px;
+        }
+        #response {
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <p>I am a
+            <select id="role" class="dropdown">
+                <option value="Entrepreneur">Entrepreneur</option>
+                <option value="Business Owner">Business Owner</option>
+            </select>
+            looking for a
+            <select id="service" class="dropdown">
+                <option value="Custom Software Solution">Custom Software Solution</option>
+                <option value="Security Audit Quote">Security Audit Quote</option>
+                <option value="Development Team">Development Team</option>
+            </select>.
+        </p>
+        <button onclick="sendToChatGPT()">Submit</button>
+        <div id="response"></div>
+    </div>
+
+    <script>
+        async function sendToChatGPT() {
+            const role = document.getElementById('role').value;
+            const service = document.getElementById('service').value;
+            const sentence = `I am a ${role} looking for a ${service}.`;
+
+            const responseElement = document.getElementById('response');
+            responseElement.innerHTML = 'Loading...';
+
+            try {
+                const response = await fetch('https://api.openai.com/v1/engines/davinci-codex/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer YOUR_OPENAI_API_KEY`
+                    },
+                    body: JSON.stringify({
+                        prompt: sentence,
+                        max_tokens: 50
+                    })
+                });
+                const data = await response.json();
+                responseElement.innerHTML = data.choices[0].text;
+            } catch (error) {
+                responseElement.innerHTML = 'Error: ' + error.message;
+            }
+        }
+    </script>
+</body>
+</html>
