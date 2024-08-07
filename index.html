@@ -44,6 +44,9 @@
     </div>
 
     <script>
+        import OpenAI from "openai";
+        const openai = new OpenAI();
+        
         async function sendToChatGPT() {
             const role = document.getElementById('role').value;
             const service = document.getElementById('service').value;
@@ -61,7 +64,7 @@
                     },
                     body: JSON.stringify({
                         prompt: sentence,
-                        max_tokens: 50
+                        max_tokens: 100
                     })
                 });
                 const data = await response.json();
